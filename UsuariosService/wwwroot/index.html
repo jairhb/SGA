@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Usuarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Usuarios registrados</h1>
+  <table id="tablaUsuarios">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Datos se insertarán aquí con JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    fetch("http://localhost:5282/api/usuarios")
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.querySelector("#tablaUsuarios tbody");
+        data.forEach(usuario => {
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+            <td>${usuario.id}</td>
+            <td>${usuario.nombre}</td>
+            <td>${usuario.correo}</td>
+          `;
+          tbody.appendChild(fila);
+        });
+      })
+      .catch(error => {
+        console.error("Error al cargar usuarios:", error);
+        alert("No se pudo conectar con el servicio.");
+      });
+  </script>
+</body>
+</html>

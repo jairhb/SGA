@@ -1,0 +1,70 @@
+# --------------------------------------------
+# Archivos generados por compilación .NET
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+# Configuración de usuario (Visual Studio, Rider)
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de publicación
+publish/
+*.db
+*.bak
+*.zip
+*.tar.gz
+
+# Archivos sensibles o locales
+appsettings.*.json
+secrets.json
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Docker / contenedores
+*.tar
+*.img
+*.iso
+
+# Git internals o conflictos
+*.orig
+
+# Paquetes descargados
+packages/
+node_modules/
+
+# Bases de datos locales (si aplica)
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Imágenes pesadas (si no son parte del diseño)
+wwwroot/images/*.psd
+wwwroot/images/*.tiff
+wwwroot/images/*.bmp
+
+# Archivos de compilación
+bin/
+obj/
+
+# Archivos de Docker virtualizados
+DockerDesktopWSL/
+*.vhdx
+
+
+
+
+
+
+
+

@@ -1,0 +1,78 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Verde institucional */
+:root {
+  --verde-policia: #00471B;
+  --verde-hover: #006822;
+}
+
+/* Tarjetas con borde verde */
+.card {
+  border: 2px solid var(--verde-policia);
+}
+
+.card:hover {
+  box-shadow: 0 0 0 3px var(--verde-hover);
+  transition: box-shadow 0.2s;
+}
+
+/* Botones estilo policía */
+.btn-police {
+  color: var(--verde-policia);
+  border: 2px solid var(--verde-policia);
+  background-color: white;
+  font-weight: 500;
+}
+
+.btn-police:hover {
+  background-color: var(--verde-policia);
+  color: white;
+  border-color: var(--verde-hover);
+}
+
+/* Botón amarillo (inscribirse) con borde verde */
+.btn-warning {
+  border: 2px solid var(--verde-policia);
+}
+
+.btn-warning:hover {
+  background-color: var(--verde-policia) !important;
+  border-color: var(--verde-hover) !important;
+  color: white !important;
+
+}
+
+footer.footer::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background-color: white;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+

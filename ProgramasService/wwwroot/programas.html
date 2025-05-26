@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Programas Disponibles</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎓 Programas disponibles</h1>
+  <table id="tablaProgramas">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch('http://localhost:5192/programas')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.querySelector('#tablaProgramas tbody');
+        data.forEach(p => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${p.id}</td>
+            <td>${p.nombre}</td>
+            <td>${p.descripcion}</td>
+            <td>${new Date(p.fechaInicio).toLocaleDateString()}</td>
+            <td>${new Date(p.fechaFin).toLocaleDateString()}</td>
+            <td><a href="pago.html?id=${p.id}&nombre=${encodeURIComponent(p.nombre)}"><button>Inscribirme</button></a></td>
+
+          `;
+          tbody.appendChild(row);
+        });
+      });
+
+    function inscribirse(id, nombre) {
+      alert(`Has seleccionado el programa "${nombre}" (ID: ${id}). Aquí iría el proceso de pago 💳`);
+      // Aquí puedes redirigir a otra página o simular un flujo de pago
+    }
+  </script>
+</body>
+</html>

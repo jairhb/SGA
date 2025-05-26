@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Proceso de Pago</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin: 12px 0 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Inscripción al Programa</h1>
+  <p id="infoPrograma"></p>
+
+  <form onsubmit="procesarPago(event)">
+    <label for="nombre">Nombre completo:</label>
+    <input type="text" id="nombre" required>
+
+    <label for="correo">Correo electrónico:</label>
+    <input type="email" id="correo" required>
+
+    <label for="metodo">Método de pago:</label>
+    <select id="metodo" required>
+      <option value="">Selecciona uno</option>
+      <option value="tarjeta">Tarjeta de crédito</option>
+      <option value="pse">PSE</option>
+      <option value="nequi">Nequi</option>
+      <option value="daviplata">Daviplata</option>
+    </select>
+
+    <button type="submit">Realizar pago</button>
+  </form>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const nombrePrograma = params.get('nombre');
+    const idPrograma = params.get('id');
+
+    document.getElementById('infoPrograma').textContent = 
+      `Estás inscrito en el programa "${nombrePrograma}" (ID: ${idPrograma}).`;
+
+    function procesarPago(event) {
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const correo = document.getElementById('correo').value;
+      const metodo = document.getElementById('metodo').value;
+
+      alert(`✅ ¡Inscripción exitosa!\n\nNombre: ${nombre}\nCorreo: ${correo}\nMétodo: ${metodo}\nPrograma: ${nombrePrograma}`);
+      // Aquí podrías hacer un POST o redirigir
+    }
+  </script>
+</body>
+</html>
