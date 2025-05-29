@@ -1,8 +1,32 @@
 @{
-    ViewData["Title"] = "Gracias por inscribirte";
+    ViewData["Title"] = "Inscripción Exitosa";
 }
 
-<h2>Gracias por inscribirte</h2>
-<p>Tu inscripción fue registrada exitosamente.</p>
-<p>Hemos enviado un correo de confirmación a tu dirección.</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg rounded-4 border-0 text-center">
+                <div class="card-header bg-success text-white rounded-top-4">
+                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body py-5">
+                    <p class="lead mb-4">
+                        <i class="fas fa-envelope-open-text fa-2x text-success mb-3"></i><br />
+                        Tu inscripción ha sido registrada exitosamente.<br />
+                        Te hemos enviado un correo de confirmación con los detalles.
+                    </p>
+
+                    <a href="@Url.Action("Crear", "Inscripciones")" class="btn btn-outline-primary rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i> Realizar otra inscripción
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}
+
 

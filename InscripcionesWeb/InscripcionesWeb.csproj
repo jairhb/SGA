@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Inscripciones.Common\Inscripciones.Common.csproj" />
-    <ProjectReference Include="..\ProgramasService\ProgramasService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

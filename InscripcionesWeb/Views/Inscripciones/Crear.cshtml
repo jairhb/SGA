@@ -4,33 +4,58 @@
     ViewData["Title"] = "Inscripción a Programa";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4 text-center">
+                    <h3 class="mb-0"><i class="fas fa-user-graduate me-2"></i>@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body px-5 py-4">
 
-<form asp-action="Crear" method="post">
-    <div class="form-group">
-        <label asp-for="IdPrograma" class="control-label">Programa:</label>
-        <select asp-for="IdPrograma" class="form-control" asp-items="ViewBag.Programas">
-            <option value="">-- Seleccione un programa --</option>
-        </select>
-        <span asp-validation-for="IdPrograma" class="text-danger"></span>
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+                        </div>
+                    }
+
+                    <form asp-action="Crear" method="post" novalidate>
+                        <div class="mb-3">
+                            <label asp-for="IdPrograma" class="form-label fw-semibold">Programa Académico:</label>
+                            <select asp-for="IdPrograma" class="form-select" asp-items="ViewBag.Programas">
+                                <option value="">-- Seleccione un programa --</option>
+                            </select>
+                            <span asp-validation-for="IdPrograma" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label fw-semibold">Nombre del Estudiante:</label>
+                            <input asp-for="Nombre" class="form-control" placeholder="Ej. Juan Pérez" />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label fw-semibold">Correo Electrónico:</label>
+                            <input asp-for="Correo" class="form-control" type="email" placeholder="ejemplo@correo.com" />
+                            <span asp-validation-for="Correo" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                                <i class="fas fa-paper-plane me-2"></i>Inscribirse
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Nombre" class="control-label">Nombre del Estudiante:</label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Correo" class="control-label">Correo del Estudiante:</label>
-        <input asp-for="Correo" class="form-control" />
-        <span asp-validation-for="Correo" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Inscribirse</button>
-</form>
+</div>
 
 @section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 

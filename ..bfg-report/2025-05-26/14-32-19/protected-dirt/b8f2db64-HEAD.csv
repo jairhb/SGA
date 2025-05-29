@@ -1,0 +1,6 @@
+75d9afc55d60db02148e9bc6156021e0c8aa8165,DELETE,regular-file,XE/XEPDB1/sysaux01.dbf,346038272,
+a1541be029cc0eb9227f9e98f5251d07f669eda6,DELETE,regular-file,XE/XEPDB1/system01.dbf,295706624,
+3e30d99d71955e7e520febd0d9629d4f58e3ded5,DELETE,regular-file,XE/pdbseed/sysaux01.dbf,346038272,
+07695d919d821b75eb30d91b9f77e8266056cb5e,DELETE,regular-file,XE/pdbseed/system01.dbf,285220864,
+9c8e937392b9ec56e238d311fa32c408c4489215,DELETE,regular-file,XE/sysaux01.dbf,671096832,
+6db21f9b78faceaa64608f401db2ded3a14e9864,DELETE,regular-file,XE/system01.dbf,927997952,

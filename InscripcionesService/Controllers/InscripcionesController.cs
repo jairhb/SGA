@@ -14,7 +14,7 @@ namespace InscripcionesService.Controllers
         {
             _inscripcionService = inscripcionService;
         }
-
+        //post para llevar a cabo la inscripción mediante el POST 
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] InscripcionDto inscripcion)
         {

@@ -1,25 +1,24 @@
 using Microsoft.EntityFrameworkCore;
+using Oracle.ManagedDataAccess.Client;
 using InscripcionesService.Data;
-using Inscripciones.Common.Interfaces; // <- Para IInscripcionService
-using InscripcionesService.Services;   // <- Para InscripcionService
+using Inscripciones.Common.Interfaces;
+using InscripcionesService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cadena de conexión Oracle
+// Obtener cadena de conexión
 var connectionString = builder.Configuration.GetConnectionString("OracleDb");
 
+// Registrar el contexto con Oracle
 builder.Services.AddDbContext<InscripcionesDbContext>(options =>
     options.UseOracle(connectionString));
 
-// Servicios adicionales
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IInscripcionService, InscripcionService>(); // Registro correcto
-
+builder.Services.AddScoped<IInscripcionService, InscripcionService>();
 var app = builder.Build();
 
-// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -29,5 +28,17 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// Probar conexión (opcional)
+try
+{
+    using var conn = new OracleConnection(connectionString);
+    conn.Open();
+    Console.WriteLine("✅ Conexión a Oracle exitosa.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Error al conectar a Oracle: {ex.Message}");
+}
 
 app.Run();

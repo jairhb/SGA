@@ -6,45 +6,37 @@ using ProgramasService.Models;
 namespace ProgramasService.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ProgramasController : ControllerBase
+[Route("api/[controller]")]
+public class ProgramasController : ControllerBase
+{
+    private readonly ProgramasDbContext _context;
+
+    public ProgramasController(ProgramasDbContext context)
     {
-        private readonly ProgramasDbContext _context;
+        _context = context;
+    }
 
-        public ProgramasController(ProgramasDbContext context)
-        {
-            _context = context;
-        }
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Programa>>> GetProgramas()
+    {
+        return await _context.Programas.ToListAsync();
+    }
 
-        // GET: /Programas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Programa>>> GetProgramas()
-        {
-            return await _context.Programas.ToListAsync();
-        }
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Programa>> GetPrograma(int id)
+    {
+        var programa = await _context.Programas.FindAsync(id);
+        if (programa == null) return NotFound();
+        return programa;
+    }
 
-        // GET: /Programas/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Programa>> GetPrograma(int id)
-        {
-            var programa = await _context.Programas.FindAsync(id);
-
-            if (programa == null)
-                return NotFound();
-
-            return programa;
-        }
-
-        // POST: /Programas
-        [HttpPost]
-        public async Task<ActionResult<Programa>> PostPrograma(Programa programa)
-        {
-            _context.Programas.Add(programa);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetPrograma), new { id = programa.Id }, programa);
-        }
-
+    [HttpPost]
+    public async Task<ActionResult<Programa>> PostPrograma(Programa programa)
+    {
+        _context.Programas.Add(programa);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetPrograma), new { id = programa.Id }, programa);
+    }
         // PUT: /Programas/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPrograma(int id, Programa programa)

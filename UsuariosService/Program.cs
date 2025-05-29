@@ -1,53 +1,53 @@
 using Microsoft.EntityFrameworkCore;
+using Oracle.ManagedDataAccess.Client;
 using UsuariosService.Data;
-using Oracle.ManagedDataAccess.Client; // Necesario para usar OracleCommand
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Cadena de conexión corregida
-var connectionString = "User Id=USUARIOS_DB;Password=usuarios123;Data Source=localhost:1521/XEPDB1";
+// 👉 Conexión Oracle desde appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("OracleDb");
 
-// Registrar UsuariosDbContext con Oracle
+// 👉 DbContext
 builder.Services.AddDbContext<UsuariosDbContext>(options =>
     options.UseOracle(connectionString));
 
-// Agregar controladores y Swagger
+// 👉 Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "UsuariosService",
+        Version = "v1",
+        Description = "API para gestión de usuarios"
+    });
+});
 
 var app = builder.Build();
 
-// Middleware
+// 👉 Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseAuthorization();
 app.MapControllers();
 
-Console.WriteLine($"Cadena de conexión: {connectionString}");
-
-// 🧪 Consulta directa para verificar conexión y contar usuarios
+// 👉 Prueba de conexión (opcional)
 try
 {
-    using (var connection = new OracleConnection(connectionString))
-    {
-        connection.Open();
-        using (var command = new OracleCommand("SELECT COUNT(*) FROM USUARIOS", connection))
-        {
-            var count = command.ExecuteScalar();
-            Console.WriteLine($"👥 Total de usuarios: {count}");
-        }
-    }
+    using var connection = new OracleConnection(connectionString);
+    connection.Open();
+    using var cmd = new OracleCommand("SELECT COUNT(*) FROM USUARIOS", connection);
+    var count = cmd.ExecuteScalar();
+    Console.WriteLine($"👤 Total de usuarios: {count}");
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"❌ Error al consultar la base de datos: {ex.Message}");
+    Console.WriteLine($"❌ Error al conectar a Oracle: {ex.Message}");
 }
 
 app.Run();

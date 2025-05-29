@@ -8,3 +8,5 @@ namespace Inscripciones.Common.DTOs
         public DateTime FechaInscripcion { get; set; }
     }
 }
+
+//Para transferir entre microservicios mediante json

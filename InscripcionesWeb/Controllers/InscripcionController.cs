@@ -1,8 +1,9 @@
-using Inscripciones.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using InscripcionesWeb.Services;
+using Inscripciones.Common.Interfaces;
+using Inscripciones.Common.DTOs;
 using InscripcionesWeb.DTOs;
+using InscripcionesWeb.Services;
 
 namespace InscripcionesWeb.Controllers
 {
@@ -10,92 +11,88 @@ namespace InscripcionesWeb.Controllers
     {
         private readonly IProgramaService _programaService;
         private readonly IEmailService _emailService;
-        private readonly InscripcionService _inscripcionService;
 
-        public InscripcionesController(IProgramaService programaService, IEmailService emailService, InscripcionService inscripcionService)
+        public InscripcionesController(IProgramaService programaService, IEmailService emailService)
         {
             _programaService = programaService;
             _emailService = emailService;
-            _inscripcionService = inscripcionService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Crear()
         {
-            Console.WriteLine("📥 GET /Inscripciones/Crear");
-
             var programas = await _programaService.ObtenerProgramas();
-
-            if (programas == null || !programas.Any())
-            {
-                ViewBag.Error = "No hay programas disponibles.";
-                return View();
-            }
-
-            ViewData["Programas"] = new SelectList(programas, "Id", "Nombre");
+            ViewBag.Programas = new SelectList(programas, "Id", "Nombre");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear(InscripcionDTO inscripcion)
+        public async Task<IActionResult> Crear(InscripcionDTO inscripcionForm)
         {
-            Console.WriteLine("📨 POST /Inscripciones/Crear");
-
             if (!ModelState.IsValid)
             {
                 var programas = await _programaService.ObtenerProgramas();
-                ViewData["Programas"] = new SelectList(programas, "Id", "Nombre");
-                return View(inscripcion);
+                ViewBag.Programas = new SelectList(programas, "Id", "Nombre");
+                return View(inscripcionForm);
             }
+
+            var inscripcionApi = new InscripcionDto
+            {
+                ProgramaId = inscripcionForm.IdPrograma,
+                NombreEstudiante = inscripcionForm.Nombre,
+                CorreoEstudiante = inscripcionForm.Correo,
+                FechaInscripcion = DateTime.UtcNow
+            };
 
             try
             {
-                var programas = await _programaService.ObtenerProgramas();
-                var programaSeleccionado = programas.FirstOrDefault(p => p.Id == inscripcion.IdPrograma);
-                inscripcion.NombrePrograma = programaSeleccionado?.Nombre ?? "Programa Desconocido";
+                using var client = new HttpClient();
+                var response = await client.PostAsJsonAsync("http://inscripciones-service:8080/api/inscripciones", inscripcionApi);
 
-                var inscripcionParaAPI = new
+                if (response.IsSuccessStatusCode)
                 {
-                    nombreEstudiante = inscripcion.Nombre,
-                    correoEstudiante = inscripcion.Correo,
-                    programaId = inscripcion.IdPrograma,
-                    fechaInscripcion = DateTime.Now
-                };
+                    // Recuperar el nombre del programa para el correo
+                    var programas = await _programaService.ObtenerProgramas();
+                    var programaSeleccionado = programas.FirstOrDefault(p => p.Id == inscripcionForm.IdPrograma);
+                    inscripcionForm.NombrePrograma = programaSeleccionado?.Nombre ?? "";
 
-                var client = new HttpClient();
-                var response = await client.PostAsJsonAsync("http://localhost:5180/api/inscripciones", inscripcionParaAPI);
+                    try
+                    {
+                        await _emailService.EnviarCorreoAsync(inscripcionForm);
+                        Console.WriteLine("📧 Correo de confirmación enviado.");
+                    }
+                    catch (Exception exCorreo)
+                    {
+                        Console.WriteLine("❌ Error al enviar correo: " + exCorreo.Message);
+                    }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("❌ Error al llamar al microservicio de inscripciones");
-                    ModelState.AddModelError("", "Error al registrar la inscripción.");
-                    ViewData["Programas"] = new SelectList(programas, "Id", "Nombre");
-                    return View(inscripcion);
+                    return RedirectToAction("Gracias");
                 }
-
-                await _emailService.EnviarCorreoAsync(inscripcion);
-                Console.WriteLine($"✅ Correo enviado a {inscripcion.Correo}");
-
-                // ✅ Correcto: redirige al método Gracias de este mismo controlador
-                return RedirectToAction("Gracias");
+                else
+                {
+                    ViewBag.Error = "Error al registrar la inscripción. El servidor devolvió un estado: " + response.StatusCode;
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error inesperado: {ex.Message}");
-                ModelState.AddModelError("", "Ocurrió un error inesperado.");
-                var programas = await _programaService.ObtenerProgramas();
-                ViewData["Programas"] = new SelectList(programas, "Id", "Nombre");
-                return View(inscripcion);
+                ViewBag.Error = "Excepción al registrar la inscripción: " + ex.Message;
             }
+
+            var programasError = await _programaService.ObtenerProgramas();
+            ViewBag.Programas = new SelectList(programasError, "Id", "Nombre");
+
+            return View(inscripcionForm);
         }
 
-        [HttpGet]
         public IActionResult Gracias()
         {
+            ViewData["Title"] = "Inscripción Exitosa";
             return View();
         }
     }
 }
+
+
 
 
 

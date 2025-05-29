@@ -1,65 +1,74 @@
-# --------------------------------------------
-# Archivos generados por compilación .NET
-bin/
-obj/
-*.exe
-*.dll
-*.pdb
-*.cache
-*.log
-
-# Configuración de usuario (Visual Studio, Rider)
-.vscode/
+# =====================
+# Archivos de Visual Studio
+# =====================
+.vs/
 *.user
 *.suo
-*.userosscache
-*.sln.docstates
-
-# Archivos de publicación
-publish/
-*.db
-*.bak
-*.zip
-*.tar.gz
-
-# Archivos sensibles o locales
-appsettings.*.json
-secrets.json
-
-# Sistema operativo
-.DS_Store
-Thumbs.db
-
-# Docker / contenedores
-*.tar
-*.img
-*.iso
-
-# Git internals o conflictos
-*.orig
-
-# Paquetes descargados
-packages/
-node_modules/
-
-# Bases de datos locales (si aplica)
-*.mdf
-*.ldf
-*.sqlite
-*.db
-
-# Imágenes pesadas (si no son parte del diseño)
-wwwroot/images/*.psd
-wwwroot/images/*.tiff
-wwwroot/images/*.bmp
 
 # Archivos de compilación
 bin/
 obj/
+*.dll
+*.exe
+*.pdb
 
-# Archivos de Docker virtualizados
-DockerDesktopWSL/
-*.vhdx
+# Configuración de Rider o VS Code
+.idea/
+*.code-workspace
+
+# Paquetes
+*.nupkg
+packages/
+*.snupkg
+
+# Archivos temporales y logs
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
+*.Thumbs.db
+
+# Configuraciones locales
+appsettings.Development.json
+secrets.json
+
+# Docker
+*.tar
+*.img
+*.pid
+
+# Bases de datos y configuraciones sensibles
+*.dbf
+*.dmp
+*.sql
+*.ora
+dbconfig/
+XE/
+
+# Archivos de backup o exportación
+*.zip
+*.rar
+*.7z
+*.gz
+*.tgz
+*.bak
+
+# Git LFS (opcional si no lo usas)
+.gitattributes
+
+# BFG y herramientas de limpieza
+bfg-*.jar
+git-filter-repo/
+
+# Ignorar archivos publicados
+publish/
+*.publish.xml
+
+# Archivos del sistema
+ehthumbs.db
+Icon?
+Desktop.ini
 
 
 
