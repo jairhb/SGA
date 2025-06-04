@@ -1,5 +1,6 @@
 using InscripcionesWeb.DTOs;
 using System.Net.Http.Json;
+using Inscripciones.Common.DTOs;
 
 namespace InscripcionesWeb.Services
 {

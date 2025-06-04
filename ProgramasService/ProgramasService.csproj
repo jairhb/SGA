@@ -17,6 +17,15 @@
     <ProjectReference Include="..\Inscripciones.Common\Inscripciones.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <None Update="appsettings.json">
+    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+  </None>
+  <None Update="appsettings.Development.json">
+    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+  </None>
+</ItemGroup>
+
 </Project>
 
 

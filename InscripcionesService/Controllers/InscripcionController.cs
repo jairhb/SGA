@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Inscripciones.Common.DTOs;
 using Inscripciones.Common.Interfaces;
+using Oracle.ManagedDataAccess.Client;
 
 namespace InscripcionesService.Controllers
-{
+{   //api para la inscripcion de aspirantes
     [ApiController]
     [Route("api/[controller]")]
     public class InscripcionesController : ControllerBase
@@ -14,16 +15,16 @@ namespace InscripcionesService.Controllers
         {
             _inscripcionService = inscripcionService;
         }
-        //post para llevar a cabo la inscripción mediante el POST 
+
         [HttpPost]
-        public async Task<IActionResult> Crear([FromBody] InscripcionDto inscripcion)
+        public async Task<IActionResult> Crear([FromBody] InscripcionDTO inscripcion)
         {
             Console.WriteLine("📩 Petición POST recibida en /api/inscripciones");
 
             if (inscripcion == null)
             {
                 Console.WriteLine("⚠️ El objeto de inscripción es nulo.");
-                return BadRequest("Los datos de inscripción no son válidos.");
+                return BadRequest("El objeto enviado es nulo.");
             }
 
             if (!ModelState.IsValid)
@@ -34,14 +35,16 @@ namespace InscripcionesService.Controllers
 
             try
             {
-                Console.WriteLine($"🔍 Registrando inscripción para: {inscripcion.NombreEstudiante}, ProgramaId: {inscripcion.ProgramaId}");
+                Console.WriteLine($"🔍 Registrando inscripción para: {inscripcion.NombreEstudiante} al programa ID: {inscripcion.ProgramaId}");
 
-                await _inscripcionService.CrearInscripcionAsync(inscripcion);
+                int inscripcionId = await _inscripcionService.CrearInscripcionAsync(inscripcion);
 
-                Console.WriteLine("✅ Inscripción registrada exitosamente.");
-                return Ok(new { mensaje = "Inscripción registrada correctamente" });
+                Console.WriteLine($"✅ Inscripción registrada exitosamente. ID generado: {inscripcionId}");
+
+                // ✅ Retornar un JSON con clave 'id' para que el frontend pueda deserializarlo fácilmente
+                return Ok(new { id = inscripcionId });
             }
-            catch (Oracle.ManagedDataAccess.Client.OracleException ex)
+            catch (OracleException ex)
             {
                 Console.WriteLine($"❌ OracleException: {ex.Message}");
                 return StatusCode(500, "Error en la base de datos Oracle.");
@@ -52,8 +55,12 @@ namespace InscripcionesService.Controllers
                 return StatusCode(500, $"Error interno: {ex.Message}");
             }
         }
-    }
+ }
+
 }
+
+
+
 
 
 

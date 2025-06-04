@@ -1,5 +1,8 @@
 @{
     ViewData["Title"] = "Inscripción Exitosa";
+    var nombreEstudiante = ViewBag.NombreEstudiante as string ?? "el estudiante";
+    var nombrePrograma = ViewBag.NombrePrograma as string ?? "el programa seleccionado";
+    var inscripcionId = ViewBag.InscripcionId ?? 0;
 }
 
 <div class="container py-5">
@@ -7,18 +10,28 @@
         <div class="col-md-8">
             <div class="card shadow-lg rounded-4 border-0 text-center">
                 <div class="card-header bg-success text-white rounded-top-4">
-                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>@ViewData["Title"]</h3>
+                    <h3 class="mb-0">
+                        <i class="fas fa-check-circle me-2"></i> @ViewData["Title"]
+                    </h3>
                 </div>
                 <div class="card-body py-5">
                     <p class="lead mb-4">
                         <i class="fas fa-envelope-open-text fa-2x text-success mb-3"></i><br />
-                        Tu inscripción ha sido registrada exitosamente.<br />
-                        Te hemos enviado un correo de confirmación con los detalles.
+                        ¡Hola <strong>@nombreEstudiante</strong>!<br />
+                        Tu inscripción al programa <strong>@nombrePrograma</strong> ha sido registrada exitosamente.<br />
+                        Recibirás un correo de confirmación con los detalles.
                     </p>
 
-                    <a href="@Url.Action("Crear", "Inscripciones")" class="btn btn-outline-primary rounded-pill">
-                        <i class="fas fa-arrow-left me-2"></i> Realizar otra inscripción
-                    </a>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="@Url.Action("Crear", "Inscripciones")" class="btn btn-outline-primary rounded-pill">
+                            <i class="fas fa-arrow-left me-2"></i> Realizar otra inscripción
+                        </a>
+
+                        <a href="@Url.Action("Detalle", "Pagos", new { inscripcionId = ViewBag.InscripcionId })"
+                          class="btn btn-outline-success rounded-pill ms-2">
+                         <i class="fas fa-credit-card me-2"></i> Ir a pago
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,5 +41,7 @@
 @section Scripts {
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 }
+
+
 
 

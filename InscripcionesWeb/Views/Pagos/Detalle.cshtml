@@ -1,0 +1,82 @@
+@model Inscripciones.Common.DTOs.PagoConsultaDTO
+
+@{
+    ViewData["Title"] = "Consulta de Pago";
+}
+
+<div class="container mt-5">
+    @if (TempData["PagoGenerado"] != null)
+    {
+        <div class="alert alert-info text-center">
+            💡 El sistema generó este pago automáticamente al no encontrar uno existente.
+        </div>
+    }
+
+    @if (TempData["PagoConfirmado"] != null)
+    {
+        <div class="alert alert-success text-center">
+            ✅ El pago ha sido confirmado exitosamente.
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Consulta de Estado de Pago</h4>
+        </div>
+        <div class="card-body">
+            @if (Model != null)
+            {
+                <dl class="row">
+                    <dt class="col-sm-4">ID de Pago</dt>
+                    <dd class="col-sm-8">@Model.Id</dd>
+
+                    <dt class="col-sm-4">ID Inscripción</dt>
+                    <dd class="col-sm-8">@Model.InscripcionId</dd>
+
+                    <dt class="col-sm-4">Monto</dt>
+                    <dd class="col-sm-8">$@Model.Monto.ToString("N0")</dd>
+
+                    <dt class="col-sm-4">Fecha Límite</dt>
+                    <dd class="col-sm-8">
+                        @(Model.FechaLimite?.ToString("dd/MM/yyyy") ?? "No registrado")
+                    </dd>
+
+                    <dt class="col-sm-4">Estado</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Estado.ToLower() == "pagado")
+                        {
+                            <span class="badge bg-success">Pagado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                        }
+                    </dd>
+                </dl>
+
+                @if (Model.Estado.ToLower() == "pendiente")
+                {
+                    <form asp-action="ConfirmarPago" asp-controller="Pagos" method="post" class="mt-4 text-center">
+                        <input type="hidden" name="inscripcionId" value="@Model.InscripcionId" />
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle me-2"></i> Confirmar Pago
+                        </button>
+                    </form>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    No se encontró información del pago para esta inscripción.
+                </div>
+            }
+
+            <!-- Botón para volver al inicio -->
+            <div class="mt-4 text-center">
+                <a href="http://localhost:5000/" class="btn btn-outline-secondary">
+                    <i class="fas fa-home me-2"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

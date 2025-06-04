@@ -1,33 +1,62 @@
 using InscripcionesWeb.DTOs;
 using Inscripciones.Common.Interfaces;
+using Inscripciones.Common.Services;
 using InscripcionesWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controladores y vistas
+// ------------------------------
+// Servicios MVC
+// ------------------------------
 builder.Services.AddControllersWithViews();
 
-// Cliente HTTP para ProgramasService
+// ------------------------------
+// Configuración de URLs de APIs
+// ------------------------------
+var apisSection = builder.Configuration.GetSection("Apis");
+builder.Services.Configure<ApiUrls>(apisSection);
+var apiUrls = apisSection.Get<ApiUrls>();
+
+// ------------------------------
+// Configuración de HTTP Clients para microservicios
+// ------------------------------
 builder.Services.AddHttpClient<IProgramaService, ProgramaService>(client =>
 {
-    client.BaseAddress = new Uri("http://programas-service:8080"); // Ajustado para entorno Docker
+    client.BaseAddress = new Uri(apiUrls.Programas);
 });
 
-// Cliente HTTP para inscripciones 
+builder.Services.AddHttpClient<IPagoService, PagoService>(client =>
+{
+    client.BaseAddress = new Uri(apiUrls.Pagos);
+});
+
 builder.Services.AddHttpClient("InscripcionesApi", client =>
 {
-    client.BaseAddress = new Uri("http://inscripciones-service:8080/");
+    client.BaseAddress = new Uri(apiUrls.Inscripciones);
 });
 
-// Servicio de Email
-builder.Services.AddScoped<IEmailService, EmailService>();
 
-// Configuración de EmailSettings
+builder.Services.AddHttpClient<IProgramaService, ProgramaService>(client =>
+{
+    client.BaseAddress = new Uri(apiUrls.Programas);
+});
+
+
+
+// ------------------------------
+// Configuración del servicio de correo
+// ------------------------------
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+// ------------------------------
+// Construcción de la aplicación
+// ------------------------------
 var app = builder.Build();
 
+// ------------------------------
 // Middleware
+// ------------------------------
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -36,9 +65,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 app.UseAuthorization();
 
+// ------------------------------
+// Rutas MVC por defecto
+// ------------------------------
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

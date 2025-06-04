@@ -3,9 +3,11 @@ using Inscripciones.Common.Interfaces;
 using System.Threading.Tasks;
 
 namespace Inscripciones.Common.Interfaces
+
 {
     public interface IInscripcionService
     {
-        Task CrearInscripcionAsync(InscripcionDto inscripcion);
+        Task<int> CrearInscripcionAsync(InscripcionDTO inscripcion); // Ahora devuelve el ID generado
     }
 }
+

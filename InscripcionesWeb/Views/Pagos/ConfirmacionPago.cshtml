@@ -1,0 +1,61 @@
+@(Model.FechaPago?.ToString("dd/MM/yyyy") ?? "No registrado")
+
+@{
+    ViewData["Title"] = "Pago Confirmado";
+}
+
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-check-circle me-2"></i> Pago Generado Correctamente
+            </h4>
+        </div>
+        <div class="card-body text-center">
+            <p class="lead">
+                ¡Gracias por tu pago! Aquí están los detalles confirmados:
+            </p>
+
+            <dl class="row justify-content-center">
+                <dt class="col-sm-4">ID del Pago:</dt>
+                <dd class="col-sm-4">@Model.Id</dd>
+
+                <dt class="col-sm-4">ID de Inscripción:</dt>
+                <dd class="col-sm-4">@Model.InscripcionId</dd>
+
+                <dt class="col-sm-4">Monto:</dt>
+                <dd class="col-sm-4">$@Model.Monto.ToString("N0")</dd>
+
+                <dt class="col-sm-4">Fecha de Pago:</dt>
+                <dd class="col-sm-4">
+                    @(Model.FechaPago.ToString("dd/MM/yyyy"))
+                </dd>
+
+                <dt class="col-sm-4">Estado:</dt>
+                <dd class="col-sm-4">
+                    @if (Model.Estado.ToLower() == "pagado")
+                    {
+                        <span class="badge bg-success">Pagado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                    }
+                </dd>
+            </dl>
+
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <a href="@Url.Action("Crear", "Inscripciones")" class="btn btn-outline-primary rounded-pill">
+                    <i class="fas fa-arrow-left me-2"></i> Realizar otra inscripción
+                </a>
+
+                <a href="@Url.Action("Detalle", "Pagos", new { inscripcionId = Model.InscripcionId })"
+                   class="btn btn-info text-white rounded-pill">
+                    <i class="fas fa-file-invoice me-2"></i> Ir a Detalle de Pago
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+

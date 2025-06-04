@@ -1,4 +1,4 @@
-@model InscripcionesWeb.DTOs.InscripcionDTO
+@model Inscripciones.Common.DTOs.InscripcionDTO
 
 @{
     ViewData["Title"] = "Inscripción a Programa";
@@ -22,23 +22,25 @@
 
                     <form asp-action="Crear" method="post" novalidate>
                         <div class="mb-3">
-                            <label asp-for="IdPrograma" class="form-label fw-semibold">Programa Académico:</label>
-                            <select asp-for="IdPrograma" class="form-select" asp-items="ViewBag.Programas">
+                            <label asp-for="ProgramaId" class="form-label fw-semibold">Programa Académico:</label>
+                            <select asp-for="ProgramaId" class="form-select" asp-items="ViewBag.Programas" id="programaSelect">
                                 <option value="">-- Seleccione un programa --</option>
                             </select>
-                            <span asp-validation-for="IdPrograma" class="text-danger small"></span>
+                            <span asp-validation-for="ProgramaId" class="text-danger small"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="NombrePrograma" id="NombrePrograma" />
+
+                        <div class="mb-3">
+                            <label asp-for="NombreEstudiante" class="form-label fw-semibold">Nombre del Estudiante:</label>
+                            <input asp-for="NombreEstudiante" class="form-control" placeholder="Ej. Juan Pérez" />
+                            <span asp-validation-for="NombreEstudiante" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Nombre" class="form-label fw-semibold">Nombre del Estudiante:</label>
-                            <input asp-for="Nombre" class="form-control" placeholder="Ej. Juan Pérez" />
-                            <span asp-validation-for="Nombre" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Correo" class="form-label fw-semibold">Correo Electrónico:</label>
-                            <input asp-for="Correo" class="form-control" type="email" placeholder="ejemplo@correo.com" />
-                            <span asp-validation-for="Correo" class="text-danger small"></span>
+                            <label asp-for="CorreoEstudiante" class="form-label fw-semibold">Correo Electrónico:</label>
+                            <input asp-for="CorreoEstudiante" class="form-control" type="email" placeholder="ejemplo@correo.com" />
+                            <span asp-validation-for="CorreoEstudiante" class="text-danger small"></span>
                         </div>
 
                         <div class="d-grid mt-4">
@@ -57,6 +59,17 @@
 @section Scripts {
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Sincronizar el nombre del programa seleccionado
+        const select = document.getElementById('programaSelect');
+        const nombreInput = document.getElementById('NombrePrograma');
+
+        select.addEventListener('change', function () {
+            const selectedOption = select.options[select.selectedIndex];
+            nombreInput.value = selectedOption.text;
+        });
+    </script>
 }
 
 

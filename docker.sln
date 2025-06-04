@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsuariosService", "Usuarios
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inscripciones.Common", "Inscripciones.Common\Inscripciones.Common.csproj", "{E5EB0675-FDAC-43B8-ADAA-2B8B365ED45D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PagosService", "PagosService\PagosService.csproj", "{80F2B430-A828-43E8-B30D-B07EB113310F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{E5EB0675-FDAC-43B8-ADAA-2B8B365ED45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5EB0675-FDAC-43B8-ADAA-2B8B365ED45D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5EB0675-FDAC-43B8-ADAA-2B8B365ED45D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80F2B430-A828-43E8-B30D-B07EB113310F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80F2B430-A828-43E8-B30D-B07EB113310F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80F2B430-A828-43E8-B30D-B07EB113310F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80F2B430-A828-43E8-B30D-B07EB113310F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

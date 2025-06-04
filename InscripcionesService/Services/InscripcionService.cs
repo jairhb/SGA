@@ -1,4 +1,5 @@
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using Inscripciones.Common.DTOs;
@@ -15,31 +16,43 @@ namespace InscripcionesService.Services
             _config = config;
         }
 
-        public async Task CrearInscripcionAsync(InscripcionDto inscripcion)
-        {
-            Console.WriteLine("➡ [InscripcionService] Preparando conexión a Oracle...");
+        public async Task<int> CrearInscripcionAsync(InscripcionDTO inscripcion)
+{
+    Console.WriteLine("➡ [InscripcionService] Preparando conexión a Oracle...");
 
-            using var connection = new OracleConnection(_config.GetConnectionString("OracleDb"));
-            using var command = connection.CreateCommand();
+    using var connection = new OracleConnection(_config.GetConnectionString("OracleDb"));
+    await connection.OpenAsync();
 
-            command.CommandText = @"
-                INSERT INTO INSCRIPCIONES (PROGRAMA_ID, NOMBRE_ESTUDIANTE, CORREO_ESTUDIANTE, FECHA_INSCRIPCION)
-                VALUES (:programaId, :nombre, :correo, :fecha)";
+    using var command = connection.CreateCommand();
 
-            command.Parameters.Add("programaId", OracleDbType.Int32).Value = inscripcion.ProgramaId;
-            command.Parameters.Add("nombre", OracleDbType.Varchar2).Value = inscripcion.NombreEstudiante;
-            command.Parameters.Add("correo", OracleDbType.Varchar2).Value = inscripcion.CorreoEstudiante;
+    // Usamos RETURNING INTO para obtener el ID generado
+    command.CommandText = @"
+        INSERT INTO INSCRIPCIONES (PROGRAMA_ID, NOMBRE_ESTUDIANTE, CORREO_ESTUDIANTE, FECHA_INSCRIPCION)
+        VALUES (:programaId, :nombre, :correo, :fecha)
+        RETURNING ID INTO :id";
 
-            var fecha = inscripcion.FechaInscripcion == default ? DateTime.UtcNow : inscripcion.FechaInscripcion;
-            command.Parameters.Add("fecha", OracleDbType.Date).Value = fecha;
+    command.Parameters.Add("programaId", OracleDbType.Int32).Value = inscripcion.ProgramaId;
+    command.Parameters.Add("nombre", OracleDbType.Varchar2).Value = inscripcion.NombreEstudiante;
+    command.Parameters.Add("correo", OracleDbType.Varchar2).Value = inscripcion.CorreoEstudiante;
+    command.Parameters.Add("fecha", OracleDbType.Date).Value = inscripcion.FechaInscripcion;
 
-            Console.WriteLine("🟡 Conectando a Oracle...");
-            await connection.OpenAsync();
-            Console.WriteLine("✅ Conectado. Ejecutando INSERT...");
+    // Parámetro de salida para el ID
+    var idParam = new OracleParameter("id", OracleDbType.Decimal)
+    {
+        Direction = ParameterDirection.Output
+    };
+    command.Parameters.Add(idParam);
 
-            int rowsAffected = await command.ExecuteNonQueryAsync();
-            Console.WriteLine($"✅ INSERT ejecutado. Filas afectadas: {rowsAffected}");
-        }
+    Console.WriteLine("🟡 Ejecutando INSERT con trigger...");
+    await command.ExecuteNonQueryAsync();
+
+    // Conversión segura del valor devuelto
+    int idGenerado = Convert.ToInt32(((OracleDecimal)idParam.Value).Value);
+    Console.WriteLine($"✅ INSERT ejecutado. ID generado: {idGenerado}");
+
+    return idGenerado;
+}
+
     }
 }
 
